@@ -9,7 +9,7 @@ A library for declaratively subscribing to Quip events inside of React render fu
 ### Example
 
 ```
-import { QuipEvents } from 'quip-react-events';
+import { QuipReactEvents } from 'quip-react-events';
 
 export class App extends React.Component {
   handleBlur() {

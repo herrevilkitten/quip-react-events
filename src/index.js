@@ -1,1 +1,1 @@
-export { default as QuipEvents } from './QuipEvents.jsx';
+export { default as QuipReactEvents } from './QuipReactEvents.jsx';
