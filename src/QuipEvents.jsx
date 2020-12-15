@@ -1,13 +1,4 @@
-const EVENTS = [
-  quip.apps.EventType.BLUR,
-  quip.apps.EventType.FOCUS,
-  quip.apps.EventType.CONTAINER_SIZE_UPDATE,
-  quip.apps.EventType.USER_PREFERENCE_UPDATE,
-  quip.apps.EventType.SITE_PREFERENCE_UPDATE,
-  quip.apps.EventType.DOCUMENT_MEMBERS_LOADED,
-  quip.apps.EventType.DOCUMENT_EDITABLE_CHANGED,
-  quip.apps.EventType.ONLINE_STATUS_CHANGED,
-];
+const EVENTS = Object.keys(quip.apps.EventType);
 
 export default class QuipEvents extends React.Component {
   constructor(props) {
@@ -52,6 +43,9 @@ export default class QuipEvents extends React.Component {
       case quip.apps.EventType.ONLINE_STATUS_CHANGED:
         this.dispatchEvent('onOnlineStatusChanged', event, quip.apps.isOnline());
         break;
+      case quip.apps.EventType.THREAD_MEMBERSHIP_CHANGED:
+        this.dispatchEvent('onThreadMembershipChanged', event, quip.apps.isThreadMember());
+        break;
       default:
         console.log('Unknown Quip event:', event);
         break;
@@ -59,7 +53,6 @@ export default class QuipEvents extends React.Component {
   }
 
   dispatchEvent(name, event, ...data) {
-    console.log('Dispatching', data, 'to', name);
     if (this.props[name] && typeof (this.props[name]) === 'function') {
       this.props[name](event, ...data);
     } else if (this.props.fallback && typeof (this.props.fallback) === 'function') {
@@ -69,14 +62,12 @@ export default class QuipEvents extends React.Component {
 
   componentDidMount() {
     EVENTS.forEach((event) => {
-      console.log('Listening for', event);
       quip.apps.addEventListener(event, this.handlers[event]);
     });
   }
 
   componentWillUnmount() {
     EVENTS.forEach((event) => {
-      console.log('Removing', event);
       quip.apps.removeEventListener(event, this.handlers[event]);
     });
   }
